@@ -74,7 +74,7 @@ print(x0, type='html')
 ```
 
 <!-- html table generated in R 4.0.1 by xtable 1.8-4 package -->
-<!-- Fri Sep 11 17:06:52 2020 -->
+<!-- Fri Sep 11 17:19:00 2020 -->
 <table border=1>
 <tr> <th>  </th> <th> Fecha </th> <th> AvgSteps </th> <th> Median </th>  </tr>
   <tr> <td align="right"> 1 </td> <td align="right"> 15615.00 </td> <td align="right"> 0.44 </td> <td align="right"> 0.00 </td> </tr>
@@ -137,7 +137,7 @@ print(x, type='html')
 ```
 
 <!-- html table generated in R 4.0.1 by xtable 1.8-4 package -->
-<!-- Fri Sep 11 17:06:52 2020 -->
+<!-- Fri Sep 11 17:19:00 2020 -->
 <table border=1>
 <tr> <th>  </th> <th>     Fecha </th> <th>    AvgSteps </th> <th>     Median </th>  </tr>
   <tr> <td align="right"> X </td> <td> Min.   :2012-10-02   </td> <td> Min.   : 0.1424   </td> <td> Min.   :0   </td> </tr>

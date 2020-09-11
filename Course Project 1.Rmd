@@ -34,7 +34,7 @@ AMdata2$date<-ymd(AMdata2$date)
 ```
 With aggregate function we Sum the data usign the date as a key (AMdata2 is the same data set of complete cases but using dplyr library and lubridate)
 
-```{r cars}
+```{r cars,echo=TRUE}
 SumSteps<-aggregate(AMdata2$steps, by=list(AMdata2$date), sum)
 ```
 
