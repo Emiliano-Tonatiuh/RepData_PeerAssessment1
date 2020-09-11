@@ -5,21 +5,74 @@ output:
     keep_md: true
 ---
 
-
-## Loading and preprocessing the data
-
-
-
-## What is mean total number of steps taken per day?
-
-
-
-## What is the average daily activity pattern?
-
-
-
-## Imputing missing values
+```{r packages,echo=FALSE,message=FALSE,warning=FALSE}
+setwd('C:\\Users\\emili\\OneDrive\\Escritorio\\R\\Coursera R\\Reproducible Research')
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(lattice)
+library(xtable)
+library(knitr)
+opts_chunk$set(fig.path = "./figure/")
+```
+##Important Note English is not mi native language, i hope i didn't have to many gramatical errors
 
 
+We are requested to pre process the data to do a histogram of steps taken each day, AMdata(Activity Monitor..) has all the data set, with no care of NA existence, this DataSet will be use at some other point but first we use [complete.cases] command to extract just complete cases.
 
-## Are there differences in activity patterns between weekdays and weekends?
+
+```{r Question1, echo=TRUE,results='asis'}
+AMdata<-read.csv('activity.csv',stringsAsFactors = FALSE,sep=",", colClasses = c('numeric',NA,"numeric")) 
+ProcesingData<-AMdata[complete.cases(AMdata),] #important command to delete NA
+AMdata2<-as_tibble(ProcesingData)
+AMdata2$date<-ymd(AMdata2$date)
+```
+With aggregate function we Sum the data usign the date as a key (AMdata2 is the same data set of complete cases but using dplyr library and lubridate)
+
+```{r cars}
+SumSteps<-aggregate(AMdata2$steps, by=list(AMdata2$date), sum)
+```
+
+
+```{r question1, echo=TRUE}
+ggplot(SumSteps, aes(x=Group.1, y=x)) + geom_bar(stat="identity") +ylab("Frequency") + xlab("Year and Month") +
+  theme_bw() 
+```
+
+In question 3 we have to get the mean and median number of steps taken each day, to do it so, we have to notice that each day is divided by intervals, because of this we need to subset the data set using each day as a filter, the variable [partial] is the result of such process, after that [resul] variable creates two column variables called [Avg] and [Med], finally we bind each iteration inside [s] Data frame.
+
+in the previous step we loose the day column, to correct this we bind the data frames [l(UniqueDates)] and [s]  in the data frame within [Timeseries]
+IMPORTANT NOTE: because we use Uniquedates in the for loop we know that the order of the rows in [s] and [l] is the same, something that is important when we bind them, otherwise a diferent approach must be use.
+```{r question3, echo=TRUE}
+UniqueDates<-unique(AMdata2$date)
+s <- data.frame()
+for (val in 1:length(UniqueDates)) {
+  partial <- subset(AMdata2, AMdata2$date == UniqueDates[[val]])
+  resul <-summarise(partial,
+              Avg = mean(partial$steps),
+              Med = median(partial$steps))
+  s <- rbind(s, resul)
+}
+l<-data.frame(UniqueDates)
+Timeseries<-cbind(l,s)
+names(Timeseries)[1]<-'Fecha'
+names(Timeseries)[2]<-'AvgSteps'    #renaming variables
+names(Timeseries)[3]<-'Median'
+Timeseries$Fecha<-ymd(Timeseries$Fecha)
+x0<-xtable(Timeseries)
+x<-xtable(summary(Timeseries))
+```
+
+Th3 former code was used thinking in the point 4-'Time series plot of the average number of steps taken'
+
+```{r question4, echo=TRUE,results='asis'}
+print(x0, type='html')
+print(x, type='html')
+p<-ggplot(Timeseries,aes(x=Fecha, y=AvgSteps))+geom_line(size=2,linetype=1,col = "blue")+geom_point(size=3)
+print(p)
+```
+
+First we find each intervals, something that is done in [uniqueinterval] knowing the interval we use a for loop looking forward to sum all the steps in a specific interval, finally we bind the interval with it corresponding sum [conjunto] and calculate the mean of each interval, at this point the question we want to answer is 5-'The 5-minute interval that, on average, contains the maximum number of steps', this is answered in [colmax].
+
+```{r question5, echo=TRUE,results='asis'}
+uniqueinterval<-unique(AMdata2$interval)
