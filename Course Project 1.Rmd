@@ -2,7 +2,10 @@
 title: "Project 1 Reproducible Research"
 author: "Emiliano Olmedo"
 date: "9/9/2020"
-output: html_document
+output: 
+  html_document:
+
+   keep_md: true
 ---
 
 ```{r packages,echo=FALSE,message=FALSE,warning=FALSE}
@@ -13,6 +16,7 @@ library(ggplot2)
 library(lattice)
 library(xtable)
 library(knitr)
+opts_chunk$set(fig.path = "./figure/")
 ```
 ##Important Note English is not mi native language, i hope i didn't have to many gramatical errors
 
